@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
             gcm = GoogleCloudMessaging.getInstance(this);
             regid = getRegistrationId(context);
 
-            if (regid.isEmpty()) {
+            if (!regid.isEmpty()) {
                 registerInBackground();
             }
         } else {
@@ -163,6 +163,21 @@ public class MainActivity extends Activity {
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
         editor.apply();
     }
+    private class RegId{
+        public String regid;
+
+        public RegId(String regid){
+            this.regid = regid;
+        }
+
+        public String getRegid(){
+            return regid;
+        }
+
+        public void setRegid(String regid){
+            this.regid = regid;
+        }
+    }
     /**
      * Sends the registration ID to your server over HTTP, so it can use GCM/HTTP
      * or CCS to send messages to your app. Not needed for this demo since the
@@ -174,9 +189,10 @@ public class MainActivity extends Activity {
 
             @Override
             protected String doInBackground(String... params) {
-                HttpPost mRequest = new HttpPost("mmbop.net:1337/register");
+                HttpPost mRequest = new HttpPost("http://mmbop.net:1337/register");
+
                 Gson gson = new Gson();
-                String gsonData = gson.toJson(params[0]);
+                String gsonData = gson.toJson(new RegId(params[0]));
                 try {
                     mRequest.setEntity(new StringEntity(gsonData, "UTF8"));
                 } catch (UnsupportedEncodingException e) {
