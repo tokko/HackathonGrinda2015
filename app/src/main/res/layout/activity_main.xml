@@ -21,7 +21,7 @@
         <EditText
             android:layout_width="match_parent"
             android:id="@+id/nameEditText"
-            android:hint="name"
+            android:hint="Name"
             android:inputType="textCapWords"
             android:layout_height="wrap_content" />
 
