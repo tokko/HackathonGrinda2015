@@ -35,6 +35,7 @@ public class MainActivity extends Activity {
     public static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final String USER_INFO_KEY = "USER_INFO_KEY";
 
     /**
      * Substitute you own sender ID here. This is the project number you got
@@ -76,6 +77,8 @@ public class MainActivity extends Activity {
         } else {
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
+        if(getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE).getString(USER_INFO_KEY, null) != null)
+            findViewById(R.id.box).setVisibility(View.GONE);
     }
 
     public void onClick(View v){
@@ -93,6 +96,7 @@ public class MainActivity extends Activity {
                 return null;
             }
         }.execute();
+        findViewById(R.id.box).setVisibility(View.GONE);
     }
     /**
      * @return Application's {@code SharedPreferences}.
@@ -202,7 +206,10 @@ public class MainActivity extends Activity {
             @Override
             protected String doInBackground(String... params) {
                 String call = "register";
-                return post(call, new RegId(params[0], ((EditText) findViewById(R.id.nameEditText)).getText().toString()));
+                RegId regid = new RegId(params[0], ((EditText) findViewById(R.id.nameEditText)).getText().toString());
+                Gson gson = new Gson();
+                getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE).edit().putString(USER_INFO_KEY, gson.toJson(regid)).apply();
+                return post(call, regid);
             }
         }.execute(getRegistrationId(this), getRegistrationId(this), getRegistrationId(this));
 
