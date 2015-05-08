@@ -23,9 +23,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -77,8 +74,8 @@ public class MainActivity extends Activity {
         } else {
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
-        if(getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE).getString(USER_INFO_KEY, null) != null)
-            findViewById(R.id.box).setVisibility(View.GONE);
+       // if(getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE).getString(USER_INFO_KEY, null) != null)
+       //     findViewById(R.id.box).setVisibility(View.GONE);
     }
 
     public void onClick(View v){
