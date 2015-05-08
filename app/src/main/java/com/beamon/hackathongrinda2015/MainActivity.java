@@ -185,7 +185,7 @@ public class MainActivity extends Activity {
      * using the 'from' address in the message.
      */
     private void sendRegistrationIdToBackend() throws UnsupportedEncodingException {
-        new AsyncTask<String, Void, String>(){
+        new AsyncTask<String, String, String>(){
 
             @Override
             protected String doInBackground(String... params) {
@@ -210,7 +210,7 @@ public class MainActivity extends Activity {
                 }
                 return null;
             }
-        }.execute(null, getRegistrationId(this), null);
+        }.execute(getRegistrationId(this), getRegistrationId(this), getRegistrationId(this));
 
 
     }
