@@ -28,11 +28,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class MainActivity extends Activity {
-    public static final String EXTRA_MESSAGE = "message";
     public static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String USER_INFO_KEY = "USER_INFO_KEY";
+    public static final String USER_ID = "user_id";
 
     /**
      * Substitute you own sender ID here. This is the project number you got
@@ -206,13 +206,34 @@ public class MainActivity extends Activity {
                 String call = "register";
                 RegId regid = new RegId(params[0], ((EditText) findViewById(R.id.nameEditText)).getText().toString());
                 Gson gson = new Gson();
-                getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE).edit().putString(USER_INFO_KEY, gson.toJson(regid)).apply();
-                return post(call, regid);
+                SharedPreferences.Editor sp = getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE).edit();
+                sp.putString(USER_INFO_KEY, gson.toJson(regid));
+                String response = post(call, regid);
+                UserId userID = gson.fromJson(response, UserId.class);
+                sp.putInt(USER_ID, userID.user_id).apply();
+                return response;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
             }
         }.execute(getRegistrationId(this), getRegistrationId(this), getRegistrationId(this));
 
 
     }
+
+    private class UserId{
+        public int user_id;
+
+        public UserId(int id){
+            this.user_id = id;
+        }
+    }
+    /*
+    * { status: 'ok', message: { user_id: user.id } }
+    */
+
 
     private <T> String post(String call, T param) {
         HttpPost mRequest = new HttpPost("http://mmbop.net:1337/"+call);
