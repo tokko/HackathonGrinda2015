@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
             regid = getRegistrationId(context);
 
             if (!regid.isEmpty()) {
-                registerInBackground();
+           //     registerInBackground();
             }
         } else {
             Log.i(TAG, "No valid Google Play Services APK found.");
@@ -84,8 +84,12 @@ public class MainActivity extends Activity {
             @Override
             protected Void doInBackground(Void... params) {
                 EditText et = (EditText) findViewById(R.id.nameEditText);
-                String name = et.getText().toString();
-                post("register", new Name(name));
+                //post("register", new RegId(getRegistrationId(MainActivity.this),name));
+                try {
+                    sendRegistrationIdToBackend();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 return null;
             }
         }.execute();
@@ -179,16 +183,10 @@ public class MainActivity extends Activity {
     }
     private class RegId{
         public String regid;
-
-        public RegId(String regid){
-            this.regid = regid;
-        }
-    }
-
-    private class Name{
         public String name;
 
-        public Name(String name){
+        public RegId(String regid, String name){
+            this.regid = regid;
             this.name = name;
         }
     }
@@ -204,7 +202,7 @@ public class MainActivity extends Activity {
             @Override
             protected String doInBackground(String... params) {
                 String call = "register";
-                return post(call, new RegId(params[0]));
+                return post(call, new RegId(params[0], ((EditText) findViewById(R.id.nameEditText)).getText().toString()));
             }
         }.execute(getRegistrationId(this), getRegistrationId(this), getRegistrationId(this));
 
