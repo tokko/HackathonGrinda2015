@@ -201,9 +201,9 @@ public class MainActivity extends Activity {
                 DefaultHttpClient client = new DefaultHttpClient();
 
                 try {
-                    HttpResponse response = client.execute(mRequest);
+                   client.execute(mRequest);
 
-                    response.getEntity().getContent();
+                   // response.getEntity().getContent();
 
                 } catch (IOException e) {
                     mRequest.abort();
