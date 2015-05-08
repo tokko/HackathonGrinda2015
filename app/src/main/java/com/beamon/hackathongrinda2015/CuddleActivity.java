@@ -26,9 +26,6 @@ public class CuddleActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().hide();
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_cuddle);
         adapter = new MessageAdapter(this, R.layout.message_entry);
         final int id = getSharedPreferences(MainActivity.class.getSimpleName(), MODE_PRIVATE).getInt(MainActivity.USER_ID, -1);
