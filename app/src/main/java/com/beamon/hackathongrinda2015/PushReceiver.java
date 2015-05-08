@@ -46,7 +46,7 @@ public class PushReceiver extends BroadcastReceiver {
                 Notification.Builder builder = new Notification.Builder(context);
                 builder.setSmallIcon(android.R.drawable.ic_dialog_alert);
                 builder.setContentTitle("PUSH NOTIFICATION RECEIVED!!!!11111onelen");
-                builder.setContentText("");
+                builder.setContentText(extras.toString());
                 Log.i("Receiver", "Received: " + extras.toString());
                 Notification m = builder.build();
                 ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, m);
