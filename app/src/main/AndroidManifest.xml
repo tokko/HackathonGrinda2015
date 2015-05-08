@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".CuddleActivity" />
         <receiver android:name=".PushReceiver"
             android:permission="com.google.android.c2dm.permission.SEND"
             >
