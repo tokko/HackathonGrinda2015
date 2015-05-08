@@ -2,6 +2,7 @@ package com.beamon.hackathongrinda2015;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -47,6 +48,9 @@ public class PushReceiver extends BroadcastReceiver {
                 builder.setSmallIcon(android.R.drawable.ic_dialog_alert);
                 builder.setContentTitle("PUSH NOTIFICATION RECEIVED!!!!11111onelen");
                 builder.setContentText(extras.toString());
+                Intent cuddleIntent = new Intent(context.getApplicationContext(), CuddleActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                PendingIntent cuddlePendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, cuddleIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.setContentIntent(cuddlePendingIntent);
                 Log.i("Receiver", "Received: " + extras.toString());
                 Notification m = builder.build();
                 ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, m);
