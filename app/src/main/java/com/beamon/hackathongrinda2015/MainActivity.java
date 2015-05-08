@@ -87,6 +87,7 @@ public class MainActivity extends Activity {
                 EditText et = (EditText) findViewById(R.id.nameEditText);
                 //post("register", new RegId(getRegistrationId(MainActivity.this),name));
                 try {
+                    registerInBackground();
                     sendRegistrationIdToBackend();
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
