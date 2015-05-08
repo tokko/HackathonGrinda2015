@@ -24,10 +24,8 @@ dependencies {
         mavenCentral()
     }
 
-    dependencies {
-        compile "com.google.android.gms:play-services:3.1.+"
-    }
-
+    compile "com.google.android.gms:play-services:3.1.+"
+    compile 'com.google.code.gson:gson:2.2.+'
     compile 'joda-time:joda-time:2.3'
     testCompile 'junit:junit:4.12'
     // TODO: requires special build of robolectric right now. working on this...

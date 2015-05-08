@@ -1,6 +1,7 @@
 package com.beamon.hackathongrinda2015;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -12,8 +13,18 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.gson.Gson;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -150,7 +161,7 @@ public class MainActivity extends Activity {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PROPERTY_REG_ID, regId);
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
-        editor.commit();
+        editor.apply();
     }
     /**
      * Sends the registration ID to your server over HTTP, so it can use GCM/HTTP
@@ -158,8 +169,34 @@ public class MainActivity extends Activity {
      * device sends upstream messages to a server that echoes back the message
      * using the 'from' address in the message.
      */
-    private void sendRegistrationIdToBackend() {
-        // Your implementation here. TODO
+    private void sendRegistrationIdToBackend() throws UnsupportedEncodingException {
+        new AsyncTask<String, Void, String>(){
+
+            @Override
+            protected String doInBackground(String... params) {
+                HttpPost mRequest = new HttpPost("mmbop.net:1337/register");
+                Gson gson = new Gson();
+                String gsonData = gson.toJson(params[0]);
+                try {
+                    mRequest.setEntity(new StringEntity(gsonData, "UTF8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                DefaultHttpClient client = new DefaultHttpClient();
+
+                try {
+                    HttpResponse response = client.execute(mRequest);
+
+                    response.getEntity().getContent();
+
+                } catch (IOException e) {
+                    mRequest.abort();
+                }
+                return null;
+            }
+        }.execute(null, getRegistrationId(this), null);
+
+
     }
     /**
      * Gets the current registration ID for application on GCM service.
