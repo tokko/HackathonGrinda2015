@@ -193,6 +193,7 @@ public class MainActivity extends Activity {
 
                 Gson gson = new Gson();
                 String gsonData = gson.toJson(new RegId(params[0]));
+                mRequest.setHeader("content-type", "application/json");
                 try {
                     mRequest.setEntity(new StringEntity(gsonData, "UTF8"));
                 } catch (UnsupportedEncodingException e) {
