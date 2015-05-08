@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -76,6 +78,18 @@ public class MainActivity extends Activity {
         }
     }
 
+    public void onClick(View v){
+        new AsyncTask<Void, Void, Void>(){
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                EditText et = (EditText) findViewById(R.id.nameEditText);
+                String name = et.getText().toString();
+                post("register", new Name(name));
+                return null;
+            }
+        }.execute();
+    }
     /**
      * @return Application's {@code SharedPreferences}.
      */
@@ -169,13 +183,13 @@ public class MainActivity extends Activity {
         public RegId(String regid){
             this.regid = regid;
         }
+    }
 
-        public String getRegid(){
-            return regid;
-        }
+    private class Name{
+        public String name;
 
-        public void setRegid(String regid){
-            this.regid = regid;
+        public Name(String name){
+            this.name = name;
         }
     }
     /**
@@ -189,32 +203,36 @@ public class MainActivity extends Activity {
 
             @Override
             protected String doInBackground(String... params) {
-                HttpPost mRequest = new HttpPost("http://mmbop.net:1337/register");
-
-                Gson gson = new Gson();
-                String gsonData = gson.toJson(new RegId(params[0]));
-                mRequest.setHeader("content-type", "application/json");
-                try {
-                    mRequest.setEntity(new StringEntity(gsonData, "UTF8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                DefaultHttpClient client = new DefaultHttpClient();
-
-                try {
-                   client.execute(mRequest);
-
-                   // response.getEntity().getContent();
-
-                } catch (IOException e) {
-                    mRequest.abort();
-                }
-                return null;
+                String call = "register";
+                return post(call, new RegId(params[0]));
             }
         }.execute(getRegistrationId(this), getRegistrationId(this), getRegistrationId(this));
 
 
     }
+
+    private <T> String post(String call, T param) {
+        HttpPost mRequest = new HttpPost("http://mmbop.net:1337/"+call);
+
+        Gson gson = new Gson();
+        String gsonData = gson.toJson(param);
+        mRequest.setHeader("content-type", "application/json");
+        try {
+            mRequest.setEntity(new StringEntity(gsonData, "UTF8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        DefaultHttpClient client = new DefaultHttpClient();
+        try {
+            HttpResponse response = client.execute(mRequest);
+            if(response != null)
+                return response.getEntity().toString();
+        } catch (IOException e) {
+            mRequest.abort();
+        }
+        return null;
+    }
+
     /**
      * Gets the current registration ID for application on GCM service.
      * <p>
